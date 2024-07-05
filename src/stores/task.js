@@ -1,7 +1,6 @@
 import { defineStore } from "pinia";
-import supabase from "@/lib/supabase"
+import supabase from "@/lib/supabase";
 import { ref } from "vue";
-
 export const useTaskStore = defineStore("taskStore", () => {
   const tasks = ref([]);
 
@@ -10,40 +9,76 @@ export const useTaskStore = defineStore("taskStore", () => {
       .from('tasks')
       .select()
 
+
     if (error) console.log("Error: ", error);
     else tasks.value = data;
     console.log("tasks: ", tasks.value);
   }
-  const addTask = async (taskDetails) => {
-    const { error } = await supabase.from("tasks").insert([taskDetails]);
-    if (error) {
-      console.error("Failed to add task:", error.message);
-      return;
-    }
-    await fetchTasks();
+  const addTask = async (userID,titleTask) => {
+    console.log(titleTask);
+    const isDone2=false;
+    const fecha = new Date();
+    const { data, error } = await supabase
+      .from('tasks')
+      .insert([
+        {user_id: userID,title: titleTask,is_complete:isDone2,inserted_at:fecha},
+      ])
+
+    if (error) console.log("Error: ", error);    
+    else tasks.value = data;
+    console.log("tasks: ", tasks.value);
+
+    fetchTasks();
   }
-  const modifyTask = async (id, updates) => {
+  const updateTask = async (id, newTitle) => {
     const { error } = await supabase
       .from("tasks")
-      .update(updates)
-      .match({ id });
+      .update({title:newTitle})
+      .eq('id',id );
+      id="";
+      newTitle="";
     if (error) console.error("Error updating task:", error);
     else await fetchTasks();
   };
   const deleteTask = async (id) => {
-    const { error } = await supabase.from("tasks").delete().match({ id });
-    if (error) console.error("Error deleting task:", error);
-    else await fetchTasks();
+    const response = await supabase
+    .from('tasks')
+    .delete()
+    .eq('id', id)
+
+    fetchTasks()
   };
 
-  const insertTask = async () => {
-    const { error } = await supabase
-    .from('tasks')
-    .insert('id')
-  }
-  const doneTask=async()=>{
-    
-  }
+  const doneTask = async (id) => {
+    const doneIt=true;
+  const { error } = await supabase
 
-  return { tasks, fetchTasks,addTask,deleteTask,modifyTask,insertTask}
+    .from('tasks')
+    .update({ is_complete:doneIt }) 
+    .eq('id', id);
+    
+  
+  if (error) {
+    console.error('Error al actualizar:', error.message);
+    
+  } else {
+    console.log('Tarea actualizada');
+  }
+};
+
+const showEdit= async (showMe) => {
+  var show=document.getElementById("showSave");
+  var ID= document.getElementById(tasks.task.id);
+  if (ID)
+
+  show.style.display=showMe;
+};
+
+const editRow= async(index) => {
+  
+  this.targetRow = index; // Establecer la fila que se debe editar
+};
+
+
+  return { tasks, fetchTasks,addTask,deleteTask,updateTask,doneTask,showEdit}
 })

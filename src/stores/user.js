@@ -1,6 +1,7 @@
 import { defineStore } from "pinia";
 import supabase from "@/lib/supabase"
 import { ref } from "vue";
+import { useTaskStore } from "./task";
 
 export const useUserStore = defineStore("userStore", () => {
   const user = ref();
@@ -20,6 +21,7 @@ export const useUserStore = defineStore("userStore", () => {
     const { data, error } = await supabase.auth.signInWithPassword({
       email: email.value,
       password: password.value
+
     })
     if (error)
     {
@@ -32,6 +34,9 @@ export const useUserStore = defineStore("userStore", () => {
   }
   async function logout() {
     const { error } = await supabase.auth.signOut();
+    email.value="";
+    password.value="";
+
   
     if (error) {
       console.log(error);

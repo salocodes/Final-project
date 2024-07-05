@@ -8,6 +8,7 @@ import { ref } from "vue";
 <template>
   <h1 class="hometittle">To Do List Home Page</h1>
   <div class="homemenu">
+   
     <router-link to="/login">LOGIN</router-link>
     <router-link to="/register">REGISTER</router-link>
   </div>
@@ -16,21 +17,18 @@ import { ref } from "vue";
 
 <style>
 .hometittle {
-  display: flex;
-  align-items: center;
-  background-color: rgb(145, 241, 10);
-  flex-direction: wrap;
-  padding-left: 60px;
-  width: 400px;
-  gap:30px;
+  background-color: #ffb6c1; /* Un tono de rosa más oscuro */
+  color: white;
+  text-align: center;
+  padding: 10px 0;
 }
 .homemenu {
+  background-color: #e7556d; /* Rosa claro */
+  font-family: Arial, sans-serif;
+  margin: 50px;
+  padding: 50px;
   display: flex;
-  align-items: center;
-  background-color: pink;
-  flex-direction: wrap;
-  padding-left: 60px;
-  width: 400px;
-  gap:30px;
+  gap:200px;
+  text-align: center;
 }
 </style>
